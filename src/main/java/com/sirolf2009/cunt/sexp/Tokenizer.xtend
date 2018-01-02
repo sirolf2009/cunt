@@ -51,6 +51,9 @@ class Tokenizer {
 				ch = in.read()
 			}
 		}
+		if(in.read != -1) {
+			throw new IllegalStateException("Unbalanced parenthesis at line " + tokenizer.lineNumber + ".");
+		}
 		tokenizer.close()
 		return tokenizer.getParsedTokens()
 	}
@@ -160,10 +163,10 @@ class Tokenizer {
 	def void close() {
 		flush()
 		if(this.state.equals(State.QMARK) || this.state.equals(State.QMARK_BSLASH)) {
-			throw new RuntimeException("Missing quotation mark at line " + this.lineNumber);
+			throw new IllegalStateException("Missing quotation mark at line " + this.lineNumber);
 		}
 		if(this.depth != 0) {
-			throw new RuntimeException("Unbalanced parenthesis at line " + this.lineNumber + ".");
+			throw new IllegalStateException("Unbalanced parenthesis at line " + this.lineNumber + ".");
 		}
 	}
 }

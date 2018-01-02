@@ -35,15 +35,15 @@ class SexpAtom implements Sexp {
 	}
 	
 	override contains(Object o) {
-		throw new UnsupportedOperationException("Sexp is atomic")
+		return false
 	}
 	
 	override containsAll(Collection<?> c) {
-		throw new UnsupportedOperationException("Sexp is atomic")
+		return false
 	}
 	
 	override isEmpty() {
-		throw new UnsupportedOperationException("Sexp is atomic")
+		return false
 	}
 	
 	override iterator() {
@@ -63,7 +63,7 @@ class SexpAtom implements Sexp {
 	}
 	
 	override size() {
-		throw new UnsupportedOperationException("Sexp is atomic")
+		return 1
 	}
 	
 	override toArray() {
