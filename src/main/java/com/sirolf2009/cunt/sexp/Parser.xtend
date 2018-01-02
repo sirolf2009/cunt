@@ -19,6 +19,8 @@ class Parser {
 			return new SexpAtom(tokenList.get(0).data)
 		} else if(tokenList.size() > 1) {
 			return new SexpList(tokenList)
+		} else {
+			throw new RuntimeException("Impossible token count: "+tokenList.size())
 		}
 	}
 

@@ -14,9 +14,13 @@ class ArithmeticMacro implements PostParseMacro {
 	override apply(Sexp it) {
 		val walker = new SexpWalker(it)
 		walker.toList().filter[
-			size() == 3 && ops.contains(get(1))
+			println(it)
+			!isAtomic() && size() == 3 && ops.contains(get(1))
 		].forEach[
-			add(remove(1))
+			println(it)
+			val op = remove(1)
+			println(it)
+			add(op)
 		]
 		it
 	}

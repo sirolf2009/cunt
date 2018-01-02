@@ -38,9 +38,7 @@ class SexpList implements Sexp {
 	}
 	
 	override toString() {
-		return '''(«FOR child : children»
-			«child.toString()»
-		«ENDFOR»)'''
+		return '''(«children.map[toString].join(" ")»)'''
 	}
 	
 	override isAtomic() {

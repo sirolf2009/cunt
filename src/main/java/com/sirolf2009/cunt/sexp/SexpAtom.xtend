@@ -14,6 +14,14 @@ class SexpAtom implements Sexp {
 		return true
 	}
 	
+	override toString() {
+		return data
+	}
+	
+	override equals(Object obj) {
+		return obj instanceof SexpAtom && (obj as SexpAtom).data.equals(data)
+	}
+	
 	override add(Sexp e) {
 		throw new UnsupportedOperationException("Sexp is atomic")
 	}

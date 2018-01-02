@@ -7,6 +7,13 @@ import org.junit.Test
 class SexpWalkerTest {
 	
 	@Test
+	def void simple() {
+		val sexp = !"(+ 5 5)"
+		val walker = new SexpWalker(sexp)
+		println(walker.toList)
+	}
+	
+	@Test
 	def void next() {
 		val sexp = !"(toplevel (midlevel 1) (midlevel 2))"
 		val walker = new SexpWalker(sexp)

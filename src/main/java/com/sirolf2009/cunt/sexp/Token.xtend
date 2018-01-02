@@ -22,6 +22,10 @@ class Token {
 		data.append(character)
 	}
 	
+	def append(String string) {
+		data.append(string)
+	}
+	
 	def getData() {
 		return data.toString()
 	}
@@ -52,6 +56,10 @@ class Token {
 
 	def isVerticalBarToken() {
 		return getData().startsWith("" + verticalBarChar) && getData().endsWith("" + verticalBarChar)
+	}
+	
+	override equals(Object obj) {
+		return obj instanceof Token && (obj as Token).data.toString().equals(data.toString())
 	}
 
 	override toString() {
