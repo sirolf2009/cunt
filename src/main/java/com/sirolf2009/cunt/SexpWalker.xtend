@@ -29,7 +29,7 @@ class SexpWalker {
 	}
 
 	def Sexp next() {
-		if(focus.size() == 0) {
+		if(focus.isAtomic()) {
 			up()
 		} else {
 			stack.push(focus)
