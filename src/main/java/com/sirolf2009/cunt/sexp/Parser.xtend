@@ -4,6 +4,7 @@ import java.io.Reader
 import java.io.StringReader
 import java.util.Stack
 import java.util.List
+import com.sirolf2009.cunt.sexp.Parser.ParseContext
 
 class Parser {
 
@@ -15,44 +16,69 @@ class Parser {
 	}
 
 	def static Sexp parse(Reader in) {
-		val tokenList = Tokenizer.tokenize(in)
-		if(tokenList.size() == 0) {
-			throw new RuntimeException("Empty expression cannot be parsed.")
-		} else if(tokenList.size() == 1) {
-			return new SexpAtom(tokenList.get(0).data)
-		} else if(tokenList.size() > 1) {
-			return asList(tokenList)
+		return parse(new ParseContext(Tokenizer.tokenize(in)))
+	}
+	
+	def static Sexp parse(ParseContext it) {
+		parse(next())
+	}
+	
+	def static Sexp parse(ParseContext it, Token token) {
+		if(token.isLeftParenthesis) {
+			parseList
+		} else if(token.leftBracket) {
+			parseVector
 		} else {
-			throw new RuntimeException("Impossible token count: "+tokenList.size())
+			parseAtom(token)
 		}
 	}
 	
-	def static SexpList asList(List<Token> tokens) {
-		val stack = new Stack<SexpList>()
-		var currentList = new SexpList()
-		var firstTime = true
-		for (Token tok : tokens) {
-			if (tok.isLeftParenthesis()) {
-				if (!firstTime) {
-					stack.push(currentList)
-					currentList = new SexpList()
-				}
-				firstTime = false
-			} else if (tok.isRightParenthesis()) {
-				if (stack.empty()) {
-					if(tokens.last == tok) {
-						return currentList
-					} else {
-						throw new IllegalArgumentException("Unbalanced parenthesis")
-					}
-				} else {
-					val lastList = currentList
-					currentList = stack.pop()
-					currentList.add(lastList)
-				}
-			} else if (!tok.isComment()) {
-				currentList.add(new SexpAtom(tok.data))
+	def static Sexp parseList(ParseContext it) {
+		val list = new SexpList()
+		while(true) {
+			val token = next()
+			if(token.rightParenthesis) {
+				return list
+			} else {
+				list.add(parse(token))
 			}
 		}
 	}
+	
+	def static Sexp parseVector(ParseContext it) {
+		val vector = new SexpVector()
+		while(true) {
+			val token = next()
+			if(token.rightBracket) {
+				return vector
+			} else {
+				vector.add(parse(token))
+			}
+		}
+	}
+	
+	def static Sexp parseAtom(ParseContext it, Token token) {
+		return new SexpAtom(token.data)
+	}
+	
+	static class ParseContext {
+		val List<Token> tokens
+		val Stack<SexpCollection> stack
+		var int currentToken
+		
+		new(List<Token> tokens) {
+			this.tokens = tokens
+			stack = new Stack()
+			currentToken = -1
+		}
+		
+		def next() {
+			currentToken++
+			return tokens.get(currentToken)
+		}
+		
+		def addToCollection(SexpAtom atom) {
+			stack.peek().add(atom)
+		}
+	} 
 }

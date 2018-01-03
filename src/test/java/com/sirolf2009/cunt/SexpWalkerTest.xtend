@@ -3,6 +3,8 @@ package com.sirolf2009.cunt
 import com.sirolf2009.cunt.sexp.Parser
 import org.junit.Assert
 import org.junit.Test
+import com.sirolf2009.cunt.sexp.SexpList
+import com.sirolf2009.cunt.sexp.SexpCollection
 
 class SexpWalkerTest {
 	
@@ -35,16 +37,20 @@ class SexpWalkerTest {
 	
 	@Test
 	def void next() {
-		val sexp = !"(toplevel (midlevel 1) (midlevel 2))"
+		val sexp = (!"(toplevel (midlevel 1) (midlevel 2))") as SexpList
 		val walker = new SexpWalker(sexp)
 		Assert.assertEquals(sexp, walker.get())
 		Assert.assertEquals(sexp.get(0), walker.next())
 		Assert.assertEquals(sexp.get(1), walker.next())
-		Assert.assertEquals(sexp.get(1).get(0), walker.next())
-		Assert.assertEquals(sexp.get(1).get(1), walker.next())
+		Assert.assertEquals(sexp.getCollection(1).get(0), walker.next())
+		Assert.assertEquals(sexp.getCollection(1).get(1), walker.next())
 		Assert.assertEquals(sexp.get(2), walker.next())
-		Assert.assertEquals(sexp.get(2).get(0), walker.next())
-		Assert.assertEquals(sexp.get(2).get(1), walker.next())
+		Assert.assertEquals(sexp.getCollection(2).get(0), walker.next())
+		Assert.assertEquals(sexp.getCollection(2).get(1), walker.next())
+	}
+	
+	def getCollection(SexpCollection sexp, int index) {
+		return sexp.get(index) as SexpCollection
 	}
 	
 	@Test

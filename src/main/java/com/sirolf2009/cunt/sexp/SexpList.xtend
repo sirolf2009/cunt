@@ -4,7 +4,7 @@ import java.util.ArrayList
 import java.util.List
 import org.eclipse.xtend.lib.annotations.Delegate
 
-class SexpList implements Sexp {
+class SexpList implements SexpCollection, List<Sexp> {
 	
 	@Delegate val List<Sexp> children
 

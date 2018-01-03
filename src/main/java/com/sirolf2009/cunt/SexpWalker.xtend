@@ -6,11 +6,12 @@ import java.util.Stack
 import org.eclipse.xtend.lib.annotations.Data
 import java.util.EmptyStackException
 import com.sirolf2009.cunt.sexp.SexpList
+import com.sirolf2009.cunt.sexp.SexpCollection
 
 class SexpWalker {
 
 	val Sexp root
-	val Stack<Sexp> stack
+	val Stack<SexpCollection> stack
 	val Stack<Mark> markStack
 	var Sexp focus
 
@@ -63,8 +64,8 @@ class SexpWalker {
 	}
 
 	def down() {
-		stack.add(focus)
-		focus = focus.get(0)
+		stack.add(focus as SexpCollection)
+		focus = (focus  as SexpCollection).get(0)
 	}
 
 	def canWalkUp() {
@@ -98,7 +99,7 @@ class SexpWalker {
 	}
 
 	def pushMark() {
-		val newStack = new Stack<Sexp>()
+		val newStack = new Stack<SexpCollection>()
 		newStack.addAll(stack)
 		markStack.push(new Mark(newStack, focus))
 	}
@@ -111,7 +112,7 @@ class SexpWalker {
 	}
 
 	@Data static class Mark {
-		val Stack<Sexp> stack
+		val Stack<SexpCollection> stack
 		val Sexp focus
 		
 		override toString() {

@@ -125,12 +125,12 @@ class Tokenizer {
 			flush()
 			this.currentToken.append(ch)
 			this.state = State.COMMENT
-		} else if(ch == leftParenthesisChar) {
+		} else if(ch == leftParenthesisChar || ch == leftBracketChar) {
 			this.depth++
 			flush()
 			this.currentToken.append(ch)
 			flush()
-		} else if(ch == rightParenthesisChar) {
+		} else if(ch == rightParenthesisChar || ch == rightBracketChar) {
 			this.depth--
 			flush()
 			this.currentToken.append(ch)

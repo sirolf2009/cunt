@@ -18,19 +18,29 @@ class FunctionCallMacroTest {
 		'''
 		//TODO do I want comma's inbetween params?
 		'''
-			println("Hello World" "How Are You" "Doing?")
+			(println("Hello World" "How Are You" "Doing?"))
 		''' -> '''
-			(println "Hello World" "How Are You" "Doing?")
+			((println "Hello World" "How Are You" "Doing?"))
 		'''
 		'''
-			println("Hello World" getValueFrom(database))
+			(println("Hello World" getValueFrom(database)))
 		''' -> '''
-			(println "Hello World" (getValueFrom database))
+			((println "Hello World" (getValueFrom database)))
 		'''
 		'''
-			+(5 5)
+			(+(5 5))
 		''' -> '''
-			(+ 5 5)
+			((+ 5 5))
+		'''
+		//FIXME macro from max depth?
+		'''
+			(+ (
+				+ (5 5)
+				+ (6 6)
+				)
+			)
+		''' -> '''
+			((+ (+ 5 5) (+ 6 6)))
 		'''
 	}
 	

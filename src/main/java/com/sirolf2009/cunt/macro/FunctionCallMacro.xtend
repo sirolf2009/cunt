@@ -9,6 +9,7 @@ import com.sirolf2009.cunt.sexp.SexpList
 import com.sirolf2009.cunt.macro.FunctionCallMacro.FunctionCall
 import com.sirolf2009.cunt.Macro
 import org.eclipse.xtend.lib.annotations.Data
+import com.sirolf2009.cunt.sexp.SexpCollection
 
 class FunctionCallMacro implements Macro {
 
@@ -36,7 +37,7 @@ class FunctionCallMacro implements Macro {
 	}
 
 	@Data static class FunctionCall {
-		val Sexp parent
+		val SexpCollection parent
 		val SexpAtom identifier
 		val SexpList params
 		

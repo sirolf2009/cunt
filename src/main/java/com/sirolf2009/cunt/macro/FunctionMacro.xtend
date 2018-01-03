@@ -9,6 +9,7 @@ import java.util.ArrayList
 import java.util.EmptyStackException
 import java.util.List
 import org.eclipse.xtend.lib.annotations.Data
+import com.sirolf2009.cunt.sexp.SexpVector
 
 class FunctionMacro implements Macro {
 
@@ -28,7 +29,7 @@ class FunctionMacro implements Macro {
 							val body = new ArrayList()
 							var searchingForEnd = true
 							while(searchingForEnd) {
-								val sexp = walker.next()
+								val sexp = walker.right()
 								if(sexp.atomic && (sexp as SexpAtom).data.equals("}")) {
 									searchingForEnd = false
 									functions.add(new FunctionDeclaration(mark.stack.peek() as SexpList, identifier as SexpAtom, name as SexpAtom, args as SexpList, open as SexpAtom, body, sexp as SexpAtom))
@@ -48,7 +49,7 @@ class FunctionMacro implements Macro {
 			val function = new SexpList(new ArrayList(#[
 				new SexpAtom("defn"),
 				name,
-				args
+				new SexpVector(args)
 			]))
 			function.addAll(body)
 			val identifierIndex = parent.indexOf(identifier)
