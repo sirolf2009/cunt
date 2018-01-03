@@ -2,6 +2,7 @@ package com.sirolf2009.cunt
 
 import java.util.regex.Matcher
 
+@Deprecated
 interface PreParseMacro {
 	
 	def String apply(String it)

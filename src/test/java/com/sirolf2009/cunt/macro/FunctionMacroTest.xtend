@@ -2,6 +2,7 @@ package com.sirolf2009.cunt.macro
 
 import org.junit.Test
 import org.junit.Assert
+import com.sirolf2009.cunt.sexp.Parser
 
 class FunctionMacroTest {
 
@@ -9,9 +10,10 @@ class FunctionMacroTest {
 
 	@Test
 	def void test() {
+		//TODO support SexpVector
 		'''
-			function -main(args) {
-			}
+			(function -main(args) {
+			})
 		''' -> '''
 			(defn -main
 				[args]
@@ -57,7 +59,7 @@ class FunctionMacroTest {
 	}
 	
 	def ->(String source, String target) {
-		Assert.assertEquals(target.trim(), macro.apply(source).trim())
+		Assert.assertEquals(target.trim(), macro.convert(Parser.parse(source)))
 	}
 
 }

@@ -1,11 +1,9 @@
 package com.sirolf2009.cunt
 
-import com.sirolf2009.cunt.macro.FunctionCallMacro
-import com.sirolf2009.cunt.macro.FunctionMacro
+import com.sirolf2009.cunt.macro.ArithmeticMacro
 import com.sirolf2009.cunt.macro.NamespaceMacro
-import java.util.List
-import java.util.concurrent.atomic.AtomicReference
 import com.sirolf2009.cunt.sexp.Parser
+import java.util.List
 
 class Transpiler {
 	
@@ -13,21 +11,22 @@ class Transpiler {
 		val source = '''
 		namespace com.sirolf2009.cunt.Example
 		
+		var Number additive
+		
 		function -main(args) {
 			println("Hello World")
 		}
 		'''
-		val transpiled = source.transpile(#[new NamespaceMacro(), new FunctionMacro(), new FunctionCallMacro()])
-		println("("+transpiled+")")
-		println(Parser.parse("("+transpiled+")"))
+		val transpiled = source.transpile(#[new NamespaceMacro(), new ArithmeticMacro()])
+		println(transpiled)
 	}
 	
-	def static transpile(String source, List<PreParseMacro> preParseMacros) {
-		val workingSource = new AtomicReference(source)
-		preParseMacros.forEach[macro|
-			workingSource.getAndUpdate[macro.apply(it)]
+	def static transpile(String source, List<Macro> postParseMacros) {
+		val workingCode = Parser.parse("("+source+")")
+		postParseMacros.forEach[macro|
+			macro.apply(workingCode)
 		]
-		return workingSource.get()
+		return workingCode
 	}
 	
 }

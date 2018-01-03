@@ -10,7 +10,7 @@ class ArithmeticMacroTest {
 	
 	@Test
 	def void test() {
-		Assert.assertEquals(Parser.parse("(+ 5 5)"), macro.apply(Parser.parse("(5 + 5)")))
+		Assert.assertEquals(Parser.parse("(+ 5 5)"), macro.convert(Parser.parse("(5 + 5)")))
 	}
 	
 }

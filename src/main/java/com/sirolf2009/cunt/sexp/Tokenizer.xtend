@@ -51,8 +51,18 @@ class Tokenizer {
 				ch = in.read()
 			}
 		}
-		if(in.read != -1) {
-			throw new IllegalStateException("Unbalanced parenthesis at line " + tokenizer.lineNumber + ".");
+		val remaining = new StringBuffer()
+		var reading = false
+		while(reading) {
+			val character = in.read()
+			if(character == -1) {
+				reading = false
+			} else {
+				remaining.append(character as char)
+			}
+		}
+		if(!remaining.toString.empty) {
+			throw new IllegalStateException("Unexpected tokens at line " + tokenizer.lineNumber + ". "+remaining);
 		}
 		tokenizer.close()
 		return tokenizer.getParsedTokens()
@@ -71,10 +81,8 @@ class Tokenizer {
 	}
 
 	def boolean readChar(char ch) {
-		var ret = false
 		stateActions.get(state).apply(ch)
-		ret = (this.depth <= 0 && this.tokenList.size() > 0)
-		return ret
+		return depth <= 0 && this.tokenList.size() > 0
 	}
 
 	def void readComment(char ch) {

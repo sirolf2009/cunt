@@ -1,30 +1,47 @@
 package com.sirolf2009.cunt.macro
 
-import com.sirolf2009.cunt.PreParseMacro
+import com.sirolf2009.cunt.SexpWalker
+import com.sirolf2009.cunt.sexp.Sexp
 import java.util.ArrayList
-import java.util.regex.Pattern
+import java.util.EmptyStackException
+import com.sirolf2009.cunt.sexp.SexpAtom
+import com.sirolf2009.cunt.sexp.SexpList
+import com.sirolf2009.cunt.macro.FunctionCallMacro.FunctionCall
+import com.sirolf2009.cunt.Macro
+import org.eclipse.xtend.lib.annotations.Data
 
-class FunctionCallMacro implements PreParseMacro {
+class FunctionCallMacro implements Macro {
 
-	static val pattern = Pattern.compile('''([^(\s]+)\(([^)]*)\)''')
-	static val paramPattern = Pattern.compile('''([^,]+)*''')
-
-	override apply(String source) {
-		var it = source
-		while(true) {
-			val matcher = pattern.matcher(it)
-			if(matcher.find()) {
-				val paramMatcher = paramPattern.matcher(matcher.group(2))
-				val params = new ArrayList()
-				while(paramMatcher.find()) {
-					if(!paramMatcher.group(0).empty) {
-						params.add(paramMatcher.group(0).trim())
+	override apply(Sexp it) {
+		val walker = new SexpWalker(it)
+		val functions = new ArrayList()
+		try {
+			while(true) {
+				val identifier = walker.next()
+				if(identifier.atomic && walker.canWalkRight()) {
+					val mark = walker.pushMark()
+					val params = walker.right()
+					if(!params.atomic) {
+						functions.add(new FunctionCall(mark.stack.peek(), identifier as SexpAtom, params as SexpList))
 					}
+					walker.popMark()
 				}
-				it = replace(matcher, '''(«matcher.group(1)» «params.join(" ")»)''')
-			} else {
-				return it
 			}
+		} catch(EmptyStackException e) {
+		}
+		functions.forEach[
+			parent.remove(identifier)
+			params.add(0, identifier)
+		]
+	}
+
+	@Data static class FunctionCall {
+		val Sexp parent
+		val SexpAtom identifier
+		val SexpList params
+		
+		override toString() {
+			return '''FunctionCall(«parent», «identifier», «params»)'''
 		}
 	}
 

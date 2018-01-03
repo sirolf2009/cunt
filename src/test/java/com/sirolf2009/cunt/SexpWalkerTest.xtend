@@ -3,7 +3,6 @@ package com.sirolf2009.cunt
 import com.sirolf2009.cunt.sexp.Parser
 import org.junit.Assert
 import org.junit.Test
-import com.sirolf2009.cunt.sexp.SexpAtom
 
 class SexpWalkerTest {
 	
@@ -11,16 +10,34 @@ class SexpWalkerTest {
 	def void simple() {
 		val sexp = !"(+ 5 5)"
 		val walker = new SexpWalker(sexp)
-		Assert.assertEquals("+", (walker.next as SexpAtom).data)
-		Assert.assertEquals("5", (walker.next as SexpAtom).data)
-		Assert.assertEquals("5", (walker.next as SexpAtom).data)
+		Assert.assertEquals(sexp, walker.get())
+		Assert.assertEquals(!"+", walker.down)
+		Assert.assertEquals(!"5", walker.right)
+		Assert.assertEquals(!"5", walker.right)
+		Assert.assertEquals(!"5", walker.left)
+		Assert.assertEquals(!"+", walker.left)
+	}
+	
+	@Test
+	def void mark() {
+		val sexp = !"(+ 5 (+ 6 7))"
+		val walker = new SexpWalker(sexp)
+		walker.down()
+		walker.right()
+		walker.right()
+		walker.pushMark()
+		walker.down()
+		Assert.assertEquals(!"6", walker.right)
+		Assert.assertEquals(!"7", walker.right)
+		walker.popMark()
+		Assert.assertEquals(!"5", walker.left)
 	}
 	
 	@Test
 	def void next() {
 		val sexp = !"(toplevel (midlevel 1) (midlevel 2))"
 		val walker = new SexpWalker(sexp)
-		Assert.assertEquals(sexp, walker.getFocus())
+		Assert.assertEquals(sexp, walker.get())
 		Assert.assertEquals(sexp.get(0), walker.next())
 		Assert.assertEquals(sexp.get(1), walker.next())
 		Assert.assertEquals(sexp.get(1).get(0), walker.next())
