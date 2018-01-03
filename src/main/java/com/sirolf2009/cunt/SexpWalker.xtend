@@ -33,21 +33,23 @@ class SexpWalker {
 			up()
 		} else {
 			stack.push(focus)
-			focus = focus.get(0)
-			return focus
+			return focus.get(0).setFocus()
 		}
 	}
 
 	def Sexp up() {
 		val parent = stack.peek()
-		val index = (0 ..< parent.size()).findFirst[parent.get(it).equals(focus)]
+		val index = (0 ..< parent.size()).findFirst[parent.get(it) === focus]
 		if(index == parent.size()-1) {
-			focus = stack.pop()
+			stack.pop().setFocus()
 			up()
 		} else {
-			focus = parent.get(index+1)
-			return focus
+			return parent.get(index+1).setFocus
 		}
+	}
+	
+	def private setFocus(Sexp focus) {
+		this.focus = focus
 	}
 
 	def getFocus() {

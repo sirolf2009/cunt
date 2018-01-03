@@ -1,14 +1,11 @@
 package com.sirolf2009.cunt.sexp
 
 import java.util.Collection
+import org.eclipse.xtend.lib.annotations.Data
 
-class SexpAtom implements Sexp {
+@Data class SexpAtom implements Sexp {
 	
 	val String data
-	
-	new(String data) {
-		this.data = data
-	}
 	
 	override isAtomic() {
 		return true
@@ -16,10 +13,6 @@ class SexpAtom implements Sexp {
 	
 	override toString() {
 		return data
-	}
-	
-	override equals(Object obj) {
-		return obj instanceof SexpAtom && (obj as SexpAtom).data.equals(data)
 	}
 	
 	override add(Sexp e) {

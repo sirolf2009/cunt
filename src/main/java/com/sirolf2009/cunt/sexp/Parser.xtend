@@ -41,8 +41,6 @@ class Parser {
 			} else if (tok.isRightParenthesis()) {
 				if (stack.empty()) {
 					if(tokens.last == tok) {
-						println(tok)
-						println(tokens)
 						return currentList
 					} else {
 						throw new IllegalArgumentException("Unbalanced parenthesis")

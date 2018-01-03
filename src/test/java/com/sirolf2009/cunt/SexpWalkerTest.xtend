@@ -3,6 +3,7 @@ package com.sirolf2009.cunt
 import com.sirolf2009.cunt.sexp.Parser
 import org.junit.Assert
 import org.junit.Test
+import com.sirolf2009.cunt.sexp.SexpAtom
 
 class SexpWalkerTest {
 	
@@ -10,7 +11,9 @@ class SexpWalkerTest {
 	def void simple() {
 		val sexp = !"(+ 5 5)"
 		val walker = new SexpWalker(sexp)
-		println(walker.toList)
+		Assert.assertEquals("+", (walker.next as SexpAtom).data)
+		Assert.assertEquals("5", (walker.next as SexpAtom).data)
+		Assert.assertEquals("5", (walker.next as SexpAtom).data)
 	}
 	
 	@Test
@@ -31,7 +34,7 @@ class SexpWalkerTest {
 	def void toList() {
 		val sexp = !"(toplevel (midlevel 1) (midlevel 2))"
 		val walker = new SexpWalker(sexp)
-		Assert.assertEquals(#[
+		Assert.assertArrayEquals(#[
 			!"(toplevel (midlevel 1) (midlevel 2))",
 			!"toplevel",
 			!"(midlevel 1)",

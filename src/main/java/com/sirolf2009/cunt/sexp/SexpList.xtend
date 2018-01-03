@@ -45,4 +45,8 @@ class SexpList implements Sexp {
 		return false
 	}
 	
+	override equals(Object obj) {
+		return obj instanceof SexpList && children.equals((obj as SexpList).children)
+	}
+	
 }

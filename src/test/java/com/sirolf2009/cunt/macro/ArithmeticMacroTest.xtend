@@ -2,6 +2,7 @@ package com.sirolf2009.cunt.macro
 
 import org.junit.Test
 import com.sirolf2009.cunt.sexp.Parser
+import org.junit.Assert
 
 class ArithmeticMacroTest {
 	
@@ -9,7 +10,7 @@ class ArithmeticMacroTest {
 	
 	@Test
 	def void test() {
-		println(macro.apply(Parser.parse("(5 + 5)")))
+		Assert.assertEquals(Parser.parse("(+ 5 5)"), macro.apply(Parser.parse("(5 + 5)")))
 	}
 	
 }
