@@ -46,13 +46,13 @@ class Tokenizer {
 		var finished = false
 		var int ch = in.read()
 		while(!finished && ch != -1) {
-			finished = tokenizer.readChar(ch as char);
+			finished = tokenizer.readChar(ch as char)
 			if(!finished) {
 				ch = in.read()
 			}
 		}
 		val remaining = new StringBuffer()
-		var reading = false
+		var reading = true
 		while(reading) {
 			val character = in.read()
 			if(character == -1) {
@@ -62,7 +62,7 @@ class Tokenizer {
 			}
 		}
 		if(!remaining.toString.empty) {
-			throw new IllegalStateException("Unexpected tokens at line " + tokenizer.lineNumber + ". "+remaining);
+			throw new IllegalStateException("Unexpected tokens at line " + tokenizer.lineNumber + ". "+remaining)
 		}
 		tokenizer.close()
 		return tokenizer.getParsedTokens()
