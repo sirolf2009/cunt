@@ -61,7 +61,7 @@ class Tokenizer {
 				remaining.append(character as char)
 			}
 		}
-		if(!remaining.toString.empty) {
+		if(!remaining.toString.trim.empty) {
 			throw new IllegalStateException("Unexpected tokens at line " + tokenizer.lineNumber + ". "+remaining)
 		}
 		tokenizer.close()
