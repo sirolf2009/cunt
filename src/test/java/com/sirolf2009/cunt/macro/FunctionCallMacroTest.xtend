@@ -32,15 +32,31 @@ class FunctionCallMacroTest {
 		''' -> '''
 			((+ 5 5))
 		'''
-		//FIXME macro from max depth?
+	}
+	
+	@Test
+	def void stacked() {
 		'''
-			(+ (
-				+ (5 5)
-				+ (6 6)
-				)
+			(getUserInfo
+				(getUsername (session)
+				getUserStore (session))
 			)
 		''' -> '''
-			((+ (+ 5 5) (+ 6 6)))
+			((getUserInfo 
+				(getUsername session) 
+				(getUserStore session)
+			))
+		'''
+		'''
+			(getUserInfo
+				(getUsername (session)
+				getUserStore (session))
+			)
+		''' -> '''
+			((getUserInfo 
+				(getUsername session) 
+				(getUserStore session)
+			))
 		'''
 	}
 	
@@ -71,7 +87,45 @@ class FunctionCallMacroTest {
 		'''
 	}
 	
+	@Test
+	def void macro() {
+		'''
+			(
+				val identifier = walker.next()
+				if(identifier.atomic && walker.canWalkRight()) {
+					val mark = walker.pushMark()
+					val params = walker.right()
+					if(!params.atomic) {
+						functions.add(new FunctionCall(mark.stack.peek(), identifier as SexpAtom, params as SexpList))
+					}
+					walker.popMark()
+				}
+			)
+		''' -> '''
+			(
+				val identifier = (walker.next) 
+				(if identifier.atomic && (walker.canWalkRight)) { 
+					val mark = (walker.pushMark) 
+					val params = (walker.right) 
+					(if !params.atomic) { 
+						(functions.add new (FunctionCall (mark.stack.peek) , identifier as SexpAtom, params as SexpList))
+					} 
+					(walker.popMark)
+				}
+			)
+		'''
+	}
+	
 	def ->(String source, String target) {
-		Assert.assertEquals(Parser.parse(target), macro.convert(Parser.parse(source)))
+		try {
+			Assert.assertEquals(Parser.parse(target), macro.convert(Parser.parse(source)))
+		} catch(AssertionError e) {
+			println("Expected")
+			println(Parser.parse(target))
+			println()
+			println("Actual")
+			println(macro.convert(Parser.parse(source)))
+			throw e
+		}
 	}
 }

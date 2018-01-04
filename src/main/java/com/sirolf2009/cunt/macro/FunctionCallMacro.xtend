@@ -22,7 +22,7 @@ class FunctionCallMacro implements Macro {
 				if(identifier.atomic && walker.canWalkRight()) {
 					val mark = walker.pushMark()
 					val params = walker.right()
-					if(!params.atomic) {
+					if(params instanceof SexpList) {
 						functions.add(new FunctionCall(mark.stack.peek(), identifier as SexpAtom, params as SexpList))
 					}
 					walker.popMark()
@@ -42,7 +42,7 @@ class FunctionCallMacro implements Macro {
 		val SexpList params
 		
 		override toString() {
-			return '''FunctionCall(«parent», «identifier», «params»)'''
+			return '''FunctionCall(«identifier», «params»)'''
 		}
 	}
 

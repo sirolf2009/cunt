@@ -4,6 +4,8 @@ import com.sirolf2009.cunt.macro.ArithmeticMacro
 import com.sirolf2009.cunt.macro.NamespaceMacro
 import com.sirolf2009.cunt.sexp.Parser
 import java.util.List
+import com.sirolf2009.cunt.macro.FunctionMacro
+import com.sirolf2009.cunt.macro.FunctionCallMacro
 
 class Transpiler {
 	
@@ -17,13 +19,17 @@ class Transpiler {
 			println("Hello World")
 		}
 		'''
-		val transpiled = source.transpile(#[new NamespaceMacro(), new ArithmeticMacro()])
+		val transpiled = source.transpile()
 		println(transpiled)
 	}
 	
-	def static transpile(String source, List<Macro> postParseMacros) {
+	def static transpile(String source) {
+		source.transpile(#[new NamespaceMacro(), new FunctionMacro(), new FunctionCallMacro(), new ArithmeticMacro()])
+	}
+	
+	def static transpile(String source, List<Macro> macros) {
 		val workingCode = Parser.parse("("+source+")")
-		postParseMacros.forEach[macro|
+		macros.forEach[macro|
 			macro.apply(workingCode)
 		]
 		return workingCode

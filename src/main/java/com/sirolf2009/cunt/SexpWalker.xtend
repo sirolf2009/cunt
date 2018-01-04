@@ -1,12 +1,11 @@
 package com.sirolf2009.cunt
 
 import com.sirolf2009.cunt.sexp.Sexp
+import com.sirolf2009.cunt.sexp.SexpCollection
 import java.util.ArrayList
+import java.util.EmptyStackException
 import java.util.Stack
 import org.eclipse.xtend.lib.annotations.Data
-import java.util.EmptyStackException
-import com.sirolf2009.cunt.sexp.SexpList
-import com.sirolf2009.cunt.sexp.SexpCollection
 
 class SexpWalker {
 
@@ -87,7 +86,7 @@ class SexpWalker {
 	}
 
 	def canWalkDown() {
-		return !focus.atomic && !(focus as SexpList).empty
+		return !focus.atomic && !(focus as SexpCollection).empty
 	}
 
 	def private indexInParent() {
